@@ -95,14 +95,33 @@ exports.allcss  = concatcss;
 
 // sass編譯
 
-const sass = require('gulp-sass')(require('sass'));
 
+const sass = require('gulp-sass')(require('sass'));
+const sourcemaps = require('gulp-sourcemaps');
 
 function sassstyle() {
     return src('./src/sass/*.scss') //來源
-        .pipe(sass.sync().on('error', sass.logError)) //編譯
-        .pipe(cleanCSS()) //壓縮
+        .pipe(sourcemaps.init())
+        .pipe(sass.sync({outputStyle:'compressed'}).on('error', sass.logError)) //編譯
+        // outputStyle:'compressed' 內建壓縮
+        // .pipe(cleanCSS()) //壓縮
+        .pipe(sourcemaps.write())
         .pipe(dest('./dist/css')); //目的地
 }
 
 exports.s =sassstyle;
+
+
+// =========== 合併html ================
+const fileinclude = require('gulp-file-include');
+
+function includeHTML() {
+    return src('src/*.html')
+        .pipe(fileinclude({
+            prefix: '@@',
+            basepath: '@file'
+        }))
+        .pipe(dest('./dist'));
+}
+
+exports.html = includeHTML;
