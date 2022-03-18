@@ -91,3 +91,17 @@ function concatcss(){
 }
 
 exports.allcss  = concatcss;
+
+
+// sass
+
+const sass = require('gulp-sass')(require('sass'));
+
+
+function sassstyle() {
+    return src('./src/sass/*.scss')
+        .pipe(sass.sync().on('error', sass.logError))
+        .pipe(dest('./dist/css'));
+}
+
+exports.s =sassstyle;
