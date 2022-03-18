@@ -102,7 +102,8 @@ const sourcemaps = require('gulp-sourcemaps');
 function sassstyle() {
     return src('./src/sass/*.scss') //來源
         .pipe(sourcemaps.init())
-        .pipe(sass.sync({outputStyle:'compressed'}).on('error', sass.logError)) //編譯
+        .pipe(sass.sync().on('error', sass.logError))
+        // .pipe(sass.sync({outputStyle:'compressed'}).on('error', sass.logError)) //編譯
         // outputStyle:'compressed' 內建壓縮
         // .pipe(cleanCSS()) //壓縮
         .pipe(sourcemaps.write())
@@ -125,3 +126,33 @@ function includeHTML() {
 }
 
 exports.html = includeHTML;
+
+
+function watchall(){
+    watch(['src/*.html' , 'src/layout/*.html'] , includeHTML);
+    // 不指定資料夾**
+    watch(['src/sass/*.scss' , 'src/sass/**/*.scss'] , sassstyle)
+}
+
+exports.w = watchall
+
+
+// 瀏覽器同步
+const browserSync = require('browser-sync');
+const reload = browserSync.reload;
+
+
+function browser(done) {
+    browserSync.init({
+        server: {
+            baseDir: "./dist",
+            index: "index.html"
+        },
+        port: 3000
+    });
+    watch(['src/*.html' , 'src/layout/*.html'] , includeHTML).on('change' , reload);
+    watch(['src/sass/*.scss' , 'src/sass/**/*.scss'] , sassstyle).on('change' , reload);
+    done();
+}
+
+exports.default = browser;
