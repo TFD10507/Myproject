@@ -93,15 +93,16 @@ function concatcss(){
 exports.allcss  = concatcss;
 
 
-// sass
+// sass編譯
 
 const sass = require('gulp-sass')(require('sass'));
 
 
 function sassstyle() {
-    return src('./src/sass/*.scss')
-        .pipe(sass.sync().on('error', sass.logError))
-        .pipe(dest('./dist/css'));
+    return src('./src/sass/*.scss') //來源
+        .pipe(sass.sync().on('error', sass.logError)) //編譯
+        .pipe(cleanCSS()) //壓縮
+        .pipe(dest('./dist/css')); //目的地
 }
 
 exports.s =sassstyle;
