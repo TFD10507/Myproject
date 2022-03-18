@@ -42,7 +42,7 @@ exports.p = package;
 
 
 
-// ================== 壓縮打包 =================
+// ================== 壓縮打包 CSS minify=================
 const cleanCSS = require('gulp-clean-css');
 
 // src/*.css *. => 所有的css檔
@@ -52,3 +52,13 @@ function minicss(){
 }
 
 exports.c = minicss;
+
+
+// js minify check
+const uglify = require('gulp-uglify');
+
+function minijs(){
+    return src('src/js/*.js').pipe(uglify()).pipe(dest('dist.js'))
+}
+
+exports.ugjs = minijs;
