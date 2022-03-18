@@ -41,6 +41,8 @@ exports.p = package;
 
 
 
+const rename = require('gulp-rename');
+
 
 // ================== 壓縮打包 CSS minify=================
 const cleanCSS = require('gulp-clean-css');
@@ -48,17 +50,44 @@ const cleanCSS = require('gulp-clean-css');
 // src/*.css *. => 所有的css檔
 // cleanCSS() 壓縮
 function minicss(){
-    return src('src/*.css').pipe(cleanCSS()).pipe(dest('dist'))
+    return src('src/*.css')
+    .pipe(cleanCSS())
+    .pipe(rename({
+        extname:'.min.css'
+    }))
+    .pipe(dest('dist'))
 }
 
 exports.c = minicss;
 
 
-// js minify check
+// ================= 壓縮打包js js minify check ======================
 const uglify = require('gulp-uglify');
 
 function minijs(){
-    return src('src/js/*.js').pipe(uglify()).pipe(dest('dist.js'))
+    return src('src/js/*.js')
+    .pipe(uglify()) //js壓縮
+    .pipe(rename({
+        // extname:'.min.js'
+        // prefix:'web-' //增加前綴字
+        // suffix:'-min' //增加後綴字
+        basename:'all'  //直接更名
+    }))
+    .pipe(dest('dist.js'))
 }
 
 exports.ugjs = minijs;
+
+
+// 整合所有檔案
+
+const concat = require('gulp-concat');
+
+function concatcss(){
+    return src('src/*.css') //來源
+    .pipe(concat('all.css')) //整合css檔
+    .pipe(cleanCSS()) //壓縮(最小化)css檔
+    .pipe(dest('dist/css')) //目的地
+}
+
+exports.allcss  = concatcss;
